@@ -1,0 +1,35 @@
+{
+  "name": "better-spawn",
+  "version": "0.0.0",
+  "description": "a better spawn",
+  "homepage": "https://github.com/paulpflug",
+  "author": {
+    "name": "Paul Pflugradt",
+    "email": "paul.pflugradt@gmail.com"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/paulpflug/better-spawn"
+  },
+  "keywords": [
+    "spawn",
+    "cross plattform",
+    "shell"
+  ],
+  "devDependencies": {
+    "bluebird": "^2.9.25",
+    "chai": "^2.3.0",
+    "coffee-script": "^1.10.0",
+    "mocha": "^2.2.4"
+  },
+  "scripts": {
+    "build": "coffee --no-header --compile --output . src/*.coffee",
+    "watch": "mocha --watch",
+    "test": "mocha",
+    "preversion": "npm test",
+    "version": "npm run build && git add .",
+    "postversion": "git push && git push --tags && npm run publish"
+  }
+}
