@@ -19,8 +19,7 @@
     "shell"
   ],
   "devDependencies": {
-    "bluebird": "^2.9.25",
-    "chai": "^2.3.0",
+    "chai": "^3.5.0",
     "coffee-script": "^1.10.0",
     "mocha": "^2.2.4"
   },
@@ -30,6 +29,6 @@
     "test": "mocha",
     "preversion": "npm test",
     "version": "npm run build && git add .",
-    "postversion": "git push && git push --tags && npm run publish"
+    "postversion": "git push && git push --tags && npm publish"
   }
 }
