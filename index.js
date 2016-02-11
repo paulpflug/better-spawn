@@ -28,6 +28,16 @@
     options.detached = !isWin;
     child = spawn(sh, [shFlag, cmd], options);
     child.cmd = cmd;
+    child.closed = false;
+    child.killed = false;
+    child.on("close", function() {
+      return child.closed = true;
+    });
+    child.on("exit", function(code, signal) {
+      if (signal != null) {
+        return child.killed = true;
+      }
+    });
     child.close = function() {
       if (isWin) {
         return child.kill("SIGINT");

@@ -17,7 +17,13 @@ module.exports = (cmd, options) ->
   options.detached = !isWin
   child = spawn sh,[shFlag,cmd], options
   child.cmd = cmd
-  child.close = () ->
+  child.closed = false
+  child.killed = false
+  child.on "close", ->
+    child.closed = true
+  child.on "exit", (code, signal) ->
+    child.killed = true if signal?
+  child.close =  ->
     if isWin
       child.kill "SIGINT"
     else

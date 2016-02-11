@@ -27,6 +27,9 @@ child = spawn "node", options
 child.cmd # will be "node"
 
 child.close() # to close reliable
+
+child.killed # will be true if killed
+child.closed # will be true if closed
 ```
 
 
