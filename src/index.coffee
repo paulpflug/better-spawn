@@ -14,7 +14,11 @@ module.exports = (cmd, options) ->
   options.cwd ?= process.cwd()
   unless options.env?
     options.env = JSON.parse JSON.stringify process.env
-    options.env.PATH += options.cwd+"/node_modules/.bin;"
+    options.env.PATH += options.cwd+"/node_modules/.bin"
+    if isWin
+      options.env.PATH += ";"
+    else
+      options.env.PATH += ":"
   options.windowsVerbatimArguments = isWin
   options.detached = !isWin
   child = spawn sh,[shFlag,cmd], options
