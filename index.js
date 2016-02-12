@@ -19,10 +19,11 @@
       options = {};
     }
     if (options.cwd == null) {
-      options.cwd = process.cwd;
+      options.cwd = process.cwd();
     }
     if (options.env == null) {
-      options.env = process.env;
+      options.env = JSON.parse(JSON.stringify(process.env));
+      options.env.PATH += process.cwd() + "/node_modules/.bin;";
     }
     options.windowsVerbatimArguments = isWin;
     options.detached = !isWin;
