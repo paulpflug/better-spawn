@@ -23,7 +23,7 @@
     }
     if (options.env == null) {
       options.env = JSON.parse(JSON.stringify(process.env));
-      options.env.PATH += process.cwd() + "/node_modules/.bin;";
+      options.env.PATH += options.cwd + "/node_modules/.bin;";
     }
     options.windowsVerbatimArguments = isWin;
     options.detached = !isWin;
