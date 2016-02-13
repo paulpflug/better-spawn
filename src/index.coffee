@@ -33,5 +33,6 @@ module.exports = (cmd, options) ->
     if isWin
       child.kill "SIGINT"
     else
-      spawn sh, [shFlag, "kill -INT -"+child.pid]
+      process.kill -child.pid, "SIGINT"
+      #spawn sh, [shFlag, "kill -INT -"+child.pid]
   return child

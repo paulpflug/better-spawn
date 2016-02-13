@@ -48,7 +48,7 @@
       if (isWin) {
         return child.kill("SIGINT");
       } else {
-        return spawn(sh, [shFlag, "kill -INT -" + child.pid]);
+        return process.kill(-child.pid, "SIGINT");
       }
     };
     return child;
