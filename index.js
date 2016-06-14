@@ -44,15 +44,6 @@
         return child.killed = true;
       }
     });
-    process.on("SIGTERM", function() {
-      return child.close("SIGTERM");
-    });
-    process.on("SIGINT", function() {
-      return child.close("SIGINT");
-    });
-    process.on("SIGHUP", function() {
-      return child.close("SIGHUP");
-    });
     child.close = function(signal) {
       if (signal == null) {
         signal = "SIGTERM";

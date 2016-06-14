@@ -28,9 +28,6 @@ module.exports = (cmd, options) ->
   child.on "close", -> child.closed = true
   child.on "exit", (exitCode, signal) ->
     child.killed = true if signal?
-  process.on "SIGTERM", -> child.close "SIGTERM"
-  process.on "SIGINT", -> child.close "SIGINT"
-  process.on "SIGHUP", -> child.close "SIGHUP"
   child.close = (signal="SIGTERM") ->
     unless child.closed or child.killed
       child.killed = true
