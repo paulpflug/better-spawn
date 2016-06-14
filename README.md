@@ -28,7 +28,7 @@ child = spawn('node', options)
 
 child.cmd // will be 'node'
 
-child.close() // to close reliable
+child.close(signal) // to close reliable, signal defaults to "SIGTERM"
 
 child.killed // will be true if killed
 child.closed // will be true if closed

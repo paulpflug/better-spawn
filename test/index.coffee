@@ -26,7 +26,7 @@ describe "better-spawn", ->
     child.closed.should.equal false
     setTimeout child.close,50
     child.on "close", ->
-      child.signalCode.should.equal "SIGINT"
+      child.signalCode.should.equal "SIGTERM"
       child.closed.should.equal true
       child.killed.should.equal true
       done()

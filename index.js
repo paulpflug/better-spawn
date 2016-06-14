@@ -39,16 +39,31 @@
     child.on("close", function() {
       return child.closed = true;
     });
-    child.on("exit", function(code, signal) {
+    child.on("exit", function(exitCode, signal) {
       if (signal != null) {
         return child.killed = true;
       }
     });
-    child.close = function() {
-      if (isWin) {
-        return child.kill("SIGINT");
-      } else {
-        return process.kill(-child.pid, "SIGINT");
+    process.on("SIGTERM", function() {
+      return child.close("SIGTERM");
+    });
+    process.on("SIGINT", function() {
+      return child.close("SIGINT");
+    });
+    process.on("SIGHUP", function() {
+      return child.close("SIGHUP");
+    });
+    child.close = function(signal) {
+      if (signal == null) {
+        signal = "SIGTERM";
+      }
+      if (!(child.closed || child.killed)) {
+        child.killed = true;
+        if (isWin) {
+          return child.kill(signal);
+        } else {
+          return process.kill(-child.pid, signal);
+        }
       }
     };
     return child;

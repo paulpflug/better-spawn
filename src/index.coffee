@@ -25,14 +25,18 @@ module.exports = (cmd, options) ->
   child.cmd = cmd
   child.closed = false
   child.killed = false
-  child.on "close", ->
-    child.closed = true
-  child.on "exit", (code, signal) ->
+  child.on "close", -> child.closed = true
+  child.on "exit", (exitCode, signal) ->
     child.killed = true if signal?
-  child.close =  ->
-    if isWin
-      child.kill "SIGINT"
-    else
-      process.kill -child.pid, "SIGINT"
-      #spawn sh, [shFlag, "kill -INT -"+child.pid]
+  process.on "SIGTERM", -> child.close "SIGTERM"
+  process.on "SIGINT", -> child.close "SIGINT"
+  process.on "SIGHUP", -> child.close "SIGHUP"
+  child.close = (signal="SIGTERM") ->
+    unless child.closed or child.killed
+      child.killed = true
+      if isWin
+        child.kill signal
+      else
+        process.kill -child.pid, signal
+        #spawn sh, [shFlag, "kill -INT -"+child.pid]
   return child
