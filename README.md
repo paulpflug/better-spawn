@@ -34,6 +34,7 @@ noOut | Boolean | `null` | sets `stdio[1] = "pipe"`
 noErr | Boolean | `null` | sets `stdio[2] = "pipe"`
 windowsVerbatimArguments | Boolean | isWindows | to support windows
 detach | Boolean | !isWindows | to support killing on unix
+Promise | Function | global.Promise | supply your own Promise lib
 
 #### Props
 Name | type | description

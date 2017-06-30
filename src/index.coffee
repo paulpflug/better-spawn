@@ -26,19 +26,25 @@ module.exports = (cmd, options) =>
     options.stdio = stdio
   options.windowsVerbatimArguments = isWin
   options.detached = !isWin
+  options.Promise ?= Promise
   child = spawn sh,[shFlag,cmd], options
   child.cmd = cmd
   child.isClosed = false
   child.isKilled = false
-  child.closed = new Promise (resolve) =>
-    child.on "close", => 
-      child.isClosed = true
-      resolve()
-  child.killed = new Promise (resolve) =>
-    child.on "exit", (exitCode, signal) =>
-      if signal?
-        child.isKilled = true
+  if options.Promise
+    child.closed = new options.Promise (resolve) =>
+      child.on "close", => 
+        child.isClosed = true
         resolve()
+    child.killed = new options.Promise (resolve) =>
+      child.on "exit", (exitCode, signal) =>
+        if signal?
+          child.isKilled = true
+          resolve()
+  else
+    console.warn "better-spawn: no Promise lib supplied"
+    child.on "close", => child.isClosed = true
+    child.on "exit", (exitCode, signal) => child.isKilled = true if signal?
   child.close = (signal="SIGTERM") =>
     unless child.isClosed or child.isKilled
       child.isKilled = true

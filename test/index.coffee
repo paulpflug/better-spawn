@@ -30,3 +30,8 @@ describe "better-spawn", =>
       child.isClosed.should.equal true
       child.isKilled.should.equal true
       return child.killed
+
+  it "should work without Promise", =>
+    child = spawn waitingProcess(10), noOut:true, Promise: false
+    should.throw => child.closed.then =>
+    
