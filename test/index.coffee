@@ -1,32 +1,32 @@
 chai = require "chai"
 should = chai.should()
-spawn = require "../index.js"
+spawn = require "../src/index.coffee"
 
-waitingProcess = (time=10000) ->
-  return "node -e 'setTimeout(function(){},#{time});'"
-failingProcess = "node -e 'throw new Error();'"
+waitingProcess = (time=10000) =>
+  return "node -e 'console.log(\"waiting..\");setTimeout(function(){},#{time});'"
+failingProcess = "node -e 'console.log(\"throwing error..\");throw new Error();'"
 
-describe "better-spawn", ->
-  it "should spawn a process", (done) ->
-    child = spawn waitingProcess(10)
-    child.on "close", ->
+describe "better-spawn", =>
+  it "should spawn a process", =>
+    child = spawn waitingProcess(10), noOut:true
+    child.closed.then =>
       child.exitCode.should.equal 0
-      child.closed.should.equal true
-      child.killed.should.equal false
-      done()
-  it "should spawn a failing process", (done) ->
-    child = spawn failingProcess
-    child.on "close", ->
+      child.isClosed.should.equal true
+      child.isKilled.should.equal false
+
+  it "should spawn a failing process", =>
+    child = spawn failingProcess, noErr:true
+    child.closed.then =>
       child.exitCode.should.equal 1
-      child.closed.should.equal true
-      child.killed.should.equal false
-      done()
-  it "should close a process on close()", (done) ->
+      child.isClosed.should.equal true
+      child.isKilled.should.equal false
+
+  it "should close a process on close()",  =>
     child = spawn waitingProcess(10000)
-    child.closed.should.equal false
+    child.isClosed.should.equal false
     setTimeout child.close,50
-    child.on "close", ->
+    child.closed.then =>
       child.signalCode.should.equal "SIGTERM"
-      child.closed.should.equal true
-      child.killed.should.equal true
-      done()
+      child.isClosed.should.equal true
+      child.isKilled.should.equal true
+      return child.killed

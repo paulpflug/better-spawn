@@ -2,7 +2,7 @@
 {spawn} = require "child_process"
 isWin = process.platform == "win32"
 
-module.exports = (cmd, options) ->
+module.exports = (cmd, options) =>
   if isWin
     sh = "cmd"
     shFlag = "/c"
@@ -19,18 +19,29 @@ module.exports = (cmd, options) ->
       options.env.PATH += ";"
     else
       options.env.PATH += ":"
+  unless options.stdio?
+    stdio = ["pipe"]
+    stdio.push if options.noOut then "pipe" else "inherit"
+    stdio.push if options.noErr then "pipe" else "inherit"
+    options.stdio = stdio
   options.windowsVerbatimArguments = isWin
   options.detached = !isWin
   child = spawn sh,[shFlag,cmd], options
   child.cmd = cmd
-  child.closed = false
-  child.killed = false
-  child.on "close", -> child.closed = true
-  child.on "exit", (exitCode, signal) ->
-    child.killed = true if signal?
-  child.close = (signal="SIGTERM") ->
-    unless child.closed or child.killed
-      child.killed = true
+  child.isClosed = false
+  child.isKilled = false
+  child.closed = new Promise (resolve) =>
+    child.on "close", => 
+      child.isClosed = true
+      resolve()
+  child.killed = new Promise (resolve) =>
+    child.on "exit", (exitCode, signal) =>
+      if signal?
+        child.isKilled = true
+        resolve()
+  child.close = (signal="SIGTERM") =>
+    unless child.isClosed or child.isKilled
+      child.isKilled = true
       if isWin
         child.kill signal
       else

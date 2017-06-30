@@ -11,34 +11,46 @@ Used by [script-runner](https://github.com/paulpflug/script-runner)
 npm install better-spawn
 ```
 
+### Breaking changes @4
+`child.closed` and `child.killed` are now promises.
+The boolean states are now available at `child.isClosed` and `child.isKilled`.
+
 ### Usage
 
 ```js
 spawn = require('better-spawn')
-
-// options same as for child_process.spawn
-// cwd defaults to process.cwd
-// env defaults to process.env
-// env.PATH defaults to process.env.PATH + ./node_modules/.bin
-// windowsVerbatimArguments will be overwritten (to work on windows)
-// detach will also be overwritten (to make close work)
-
-// node will be run within sh or cmd
 child = spawn('node', options)
-
-child.cmd // will be 'node'
-
-child.close(signal) // to close reliable, signal defaults to "SIGTERM"
-
-child.killed // will be true if killed
-child.closed // will be true if closed
 ```
 
+### Options
+
+Name | type | default | description
+---:| --- | ---| ---
+cwd | String | process.cwd | current working directory
+env | Object | process.env | environment variables
+env.PATH  | String | process.env.PATH + ./node_modules/.bin | used to resolve commands
+stdio | [See documentation](https://nodejs.org/api/child_process.html#child_process_options_stdio) | `["pipe","inherit","inherit"]` | to control output
+noOut | Boolean | `null` | sets `stdio[1] = "pipe"`
+noErr | Boolean | `null` | sets `stdio[2] = "pipe"`
+windowsVerbatimArguments | Boolean | isWindows | to support windows
+detach | Boolean | !isWindows | to support killing on unix
+
+#### Props
+Name | type | description
+---:| --- | ---
+cmd | String | cmd called
+isKilled | Boolean | is child process killed
+isClosed | Boolean | is child process closed
+killed | Promise | fulfilled when child process killed
+closed | Promise | fulfilled when child process closed
+close | Function | call to kill child process
 ### Examples
 
 ```js
 // pipe to shell without losing color
-child = spawn('node',{stdio:'inherit'})
+child = spawn('node')
+// suppress normal output, but maintain err output
+child = spawn('node',{noOut:true})
 // set empty env (default in node)
 child = spawn('node',{env: {PATH:""}})
 ```

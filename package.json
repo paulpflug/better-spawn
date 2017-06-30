@@ -18,10 +18,13 @@
     "cross plattform",
     "shell"
   ],
+  "files": [
+    "index.js"
+  ],
   "devDependencies": {
-    "chai": "^3.5.0",
-    "coffee-script": "^1.10.0",
-    "mocha": "^2.2.4"
+    "chai": "^4.0.2",
+    "coffeescript": "^2.0.0-beta2",
+    "mocha": "^3.4.2"
   },
   "scripts": {
     "build": "coffee --no-header --compile --output . src/*.coffee",
