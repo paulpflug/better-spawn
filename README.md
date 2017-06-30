@@ -11,7 +11,7 @@ Used by [script-runner](https://github.com/paulpflug/script-runner)
 npm install better-spawn
 ```
 
-### Breaking changes @4
+### Breaking changes @1
 `child.closed` and `child.killed` are now promises.
 The boolean states are now available at `child.isClosed` and `child.isKilled`.
 
