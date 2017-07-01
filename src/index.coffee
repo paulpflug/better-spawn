@@ -1,6 +1,7 @@
 # out: ../index.js
 {spawn} = require "child_process"
 isWin = process.platform == "win32"
+path = require "path"
 
 module.exports = (cmd, options) =>
   if isWin
@@ -14,11 +15,9 @@ module.exports = (cmd, options) =>
   options.cwd ?= process.cwd()
   unless options.env?
     options.env = JSON.parse JSON.stringify process.env
-    options.env.PATH += options.cwd+"/node_modules/.bin"
-    if isWin
-      options.env.PATH += ";"
-    else
-      options.env.PATH += ":"
+    tmp = options.env.PATH.split(path.delimiter)
+    tmp.push path.resolve(options.cwd,"./node_modules/.bin")
+    options.env.PATH = tmp.join(path.delimiter)
   unless options.stdio?
     stdio = ["pipe"]
     stdio.push if options.noOut then "pipe" else "inherit"
