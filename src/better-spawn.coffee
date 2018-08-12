@@ -58,5 +58,6 @@ module.exports = (cmd, options) ->
       else
         process.kill -child.pid, signal
         #spawn sh, [shFlag, "kill -INT -"+child.pid]
+    return child.closed
 
   return child
