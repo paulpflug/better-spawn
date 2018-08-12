@@ -8,7 +8,7 @@
     "email": "paul.pflugradt@gmail.com"
   },
   "license": "MIT",
-  "main": "index.js",
+  "main": "lib/better-spawn.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/paulpflug/better-spawn"
@@ -19,19 +19,20 @@
     "shell"
   ],
   "files": [
-    "index.js"
+    "lib/"
   ],
   "devDependencies": {
-    "chai": "^4.0.2",
-    "coffeescript": "^2.0.0-beta2",
-    "mocha": "^3.4.2"
+    "coffee-loader": "^0.9.0",
+    "coffeescript": "^2.3.1",
+    "snapy": "^0.1.6"
   },
   "scripts": {
-    "build": "coffee --no-header --compile --output . src/*.coffee",
-    "watch": "mocha --watch",
-    "test": "mocha",
+    "build": "coffee --no-header --compile --output lib/ src/*.coffee",
+    "watch": "snapy --watch",
+    "test": "snapy",
     "preversion": "npm test",
     "version": "npm run build && git add .",
     "postversion": "git push && git push --tags && npm publish"
-  }
+  },
+  "dependencies": {}
 }
